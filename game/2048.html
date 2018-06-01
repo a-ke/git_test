@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>2048</title>
+    <style media="screen">
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      .clearfix::after {
+        display: block;
+        content: "";
+        clear: both;
+      }
+      .box {
+        width: 500px;
+        height: 500px;
+        background: #bbada0;
+        border-radius: 10px;
+        margin: 100px auto;
+        padding: 15px;
+      }
+      .box > ul {
+        list-style: none;
+        width: 100%;
+        height: 100%;
+      }
+      .box > ul > li{
+        width: 22%;
+        height: 22%;
+        border-radius: 5px;
+        color: #776e65;
+        font-size: 50px;
+        font-weight: bold;
+        line-height: 2em;
+        text-align: center;
+        background-color: rgba(238, 228, 218, 0.35);
+        float: left;
+        margin: 1.5%;
+      }
+
+      .box li > p {
+        width: 100%;
+        height: 100%;
+        border-radius: 5px;
+        display: block;
+      }
+      .num2 {
+        background-color: #eee4da;
+      }
+      .num4 {
+        background-color: #ede0c8;
+      }
+      .num8 {
+        color: #fff;
+        background-color: #f2b179;
+      }
+      .num16 {
+        color: #fff;
+        background-color: #f59563;
+      }
+      .num32 {
+        color: #fff;
+        background-color: #f67c5f;
+      }
+      .num64 {
+        color: #fff;
+        background-color: #f65e3b;
+      }
+      .num128 {
+        color: #fff;
+        background-color: #edcf72;
+      }
+      .num256 {
+        color: #fff;
+        background-color: #edcc61;
+      }
+      .num512 {
+        color: #f9f6f2;
+        background-color: #edc850;
+      }
+      .num1024 {
+        color: #f9f6f2;
+        background-color: #edc53f;
+      }
+      .num2048 {
+        color: #f9f6f2;
+        background-color: #edc22e;
+      }
+    </style>
+  </head>
+  <body>
+
+    <div class="box">
+      <ul id="lists" class="clearfix">
+        <li class="num2"></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
+    </div>
+
+    <script type="text/javascript">
+
+      (function () {
+        var lists = document.getElementById("lists");
+
+
+        //随机产生num(不包括num)以内的正整数
+        function randomNum(num) {
+          random = Math.floor(Math.random()*num);
+          return random;
+        }
+
+
+        //产生数字块
+        function factory() {
+          var random = randomNum(16);
+          var num = [2,4];
+          var content = num[randomNum(2)];
+          while(lists.children[random].innerHTML){
+            random = randomNum(16);
+          }
+          lists.children[random].innerHTML = "<p class='num"+ content +"'>"+ content +"</p>";
+        }
+
+        /*
+        功能:数字块移动
+        @row: 当前位置的行数
+        @col: 当前位置的列数
+        @direction: 移动的方向
+        返回值:是否成功移动
+        */
+        function move(row,col,direction) {
+          //向左移动一格
+          if(direction == "left" && col > 0){
+            if(!lists.children[row*4+col-1].innerHTML){
+              //如果左边没内容,则移动
+              lists.children[row*4+col-1].innerHTML = lists.children[row*4+col].innerHTML;
+              lists.children[row*4+col].innerHTML = "";
+              return true;
+            }else if(lists.children[row*4+col-1].innerHTML == lists.children[row*4+col].innerHTML){
+              //如果当前的内容和左边的内容一样,则将两个内容想加放到左边格子,并清空当前格子
+              var content = parseInt(lists.children[row*4+col-1].textContent) + parseInt(lists.children[row*4+col].textContent);
+              lists.children[row*4+col-1].innerHTML = "<p class='num"+ content +"'>"+ content +"</p>" ;
+              lists.children[row*4+col].innerHTML = "";
+              return true;
+            }
+            return false;
+          }
+
+          //向右移动一格
+          if(direction == "right" && col < 3){
+            if(!lists.children[row*4+col+1].innerHTML){
+              //如果右边没内容,则移动
+              lists.children[row*4+col+1].innerHTML = lists.children[row*4+col].innerHTML;
+              lists.children[row*4+col].innerHTML = "";
+              return true;
+            }else if(lists.children[row*4+col+1].innerHTML == lists.children[row*4+col].innerHTML){
+              //如果当前的内容和右边的内容一样,则将两个内容想加放到右边格子,并清空当前格子
+              var content = parseInt(lists.children[row*4+col+1].textContent) + parseInt(lists.children[row*4+col].textContent);
+              lists.children[row*4+col+1].innerHTML = "<p class='num"+ content +"'>"+ content +"</p>" ;
+              lists.children[row*4+col].innerHTML = "";
+              return true;
+            }
+            return false;
+          }
+
+          //向上移动一格
+          if(direction == "top" && row >0){
+            if(!lists.children[(row-1)*4+col].innerHTML){
+              //如果上边没有内容,则移动
+              lists.children[(row-1)*4+col].innerHTML = lists.children[row*4+col].innerHTML;
+              lists.children[row*4+col].innerHTML = "";
+              return true;
+            }else if(lists.children[(row-1)*4+col].innerHTML == lists.children[row*4+col].innerHTML){
+              //如果当前的内容和上边的内容一样,则将两个内容想加放到上边格子,并清空当前格子
+              var content = parseInt(lists.children[(row-1)*4+col].textContent) + parseInt(lists.children[row*4+col].textContent);
+              lists.children[(row-1)*4+col].innerHTML = "<p class='num"+ content +"'>"+ content +"</p>" ;
+              lists.children[row*4+col].innerHTML = "";
+              return true;
+            }
+            return false;
+          }
+
+          //向下移动一格
+          if(direction == "down" && row < 3){
+            if(!lists.children[(row+1)*4+col].innerHTML){
+              //如果下边没有内容,则移动
+              lists.children[(row+1)*4+col].innerHTML = lists.children[row*4+col].innerHTML;
+              lists.children[row*4+col].innerHTML = "";
+              return true;
+            }else if(lists.children[(row+1)*4+col].innerHTML == lists.children[row*4+col].innerHTML){
+              //如果当前的内容和下边的内容一样,则将两个内容想加放到下边格子,并清空当前格子
+              var content = parseInt(lists.children[(row+1)*4+col].textContent) + parseInt(lists.children[row*4+col].textContent);
+              lists.children[(row+1)*4+col].innerHTML = "<p class='num"+ content +"'>"+ content +"</p>" ;
+              lists.children[row*4+col].innerHTML = "";
+              return true;
+            }
+            return false;
+          }
+        }
+
+        //游戏初始化
+        function init() {
+          factory();
+          factory();
+        }
+
+        //游戏结束条件
+        function gameover() {
+          var flag = 0;
+          for(var i = 0;i < 16;i++){
+            if(!lists.children[i].textContent){
+              flag = 1;
+            }
+          }
+          if(!flag){
+            for(var i = 0;i < 3;i++){
+              for(var j = 0;j < 3;j++){
+                if(lists.children[i*4+j].textContent == lists.children[i*4+j+1] || lists.children[i*4+j].textContent == lists.children[(i+1)*4+j].textContent){
+                  flag = 1;
+                };
+              }
+            }
+            for(var j = 0;j < 3;j++){
+              if(lists.children[i*4+j].textContent == lists.children[i*4+j+1].textContent){
+                flag = 1;
+              }
+            }
+            for(var i = 0;i < 3;i++){
+              if(lists.children[i*4+j].textContent == lists.children[(i+1)*4+j].textContent){
+                flag = 1;
+              }
+            }
+            if(!flag){
+              alert("gameover!!!!");
+              window.location = window.location;
+            }
+          }
+          setTimeout(gameover,100);
+        }
+
+        //游戏操作
+        function handler() {
+          document.onkeydown = function (event) {
+            // console.log(event.key);
+            //flag 是个标识符号,若为0,则没发生移动,若为1,则发生了移动
+            var flag = 0;
+
+            //左
+            if(event.key == "ArrowLeft"){
+              flag = 0;
+              for(var i = 0;i < 4;i++){
+                for(var times = 0; times < 4;times++){
+                  for(var j = 0;j < 4;j++){
+                    if(move(i,j,"left")){
+                      flag = 1;
+                    }
+                  }
+                }
+              }
+              if(flag){
+                //若发生了移动,则重新产生一个
+                factory();
+              }
+            }
+
+            //右
+            if(event.key == "ArrowRight"){
+              flag = 0;
+              for(var i = 0;i < 4;i++){
+                for(var times = 0;times < 4;times++){
+                  for(var j = 0;j < 4;j++){
+                    if(move(i,j,"right")){
+                      flag = 1;
+                    }
+                  }
+                }
+              }
+              if(flag){
+                factory();
+              }
+            }
+
+            //上
+            if(event.key == "ArrowUp"){
+              flag = 0;
+              for(var times = 0;times < 4;times++){
+                for(var i = 0;i < 4;i++){
+                  for(var j = 0;j < 4;j++){
+                    if(move(i,j,"top")){
+                      flag = 1;
+                    }
+                  }
+                }
+              }
+              if(flag){
+                factory();
+              }
+            }
+
+            //下
+            if(event.key == "ArrowDown"){
+              flag = 0;
+              for(var times = 0;times < 4;times++){
+                for(var i = 0;i < 4;i++){
+                  for(var j = 0;j < 4;j++){
+                    if(move(i,j,"down")){
+                      flag = 1;
+                    }
+                  }
+                }
+              }
+              if(flag){
+                factory();
+              }
+            }
+          }
+        }
+
+
+        init();
+        handler();
+        gameover();
+
+      })();
+
+    </script>
+
+  </body>
+</html>
