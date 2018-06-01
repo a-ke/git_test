@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>flex布局</title>
+	<style>
+		.container {
+			display: flex;
+		}
+		.container div {
+			height: 100px;
+			text-align: center;
+		}
+		.container .left {
+			display: inline-flex;
+			justify-content: center;
+			align-items: center;
+			flex: 0 0 auto;
+			width: 300px;
+			background: lightcoral;
+		}
+		.container .left span {
+		}
+		.container .main {
+			flex: 1 1 auto;
+			min-width: 500px;
+			background: lightyellow;
+		}
+		.container .right {
+			flex: 0 0 auto;
+			width: 300px;
+			background: lightblue;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="left"><span>test</span></div>
+		<div class="main"></div>
+		<div class="right">test</div>
+	</div>
+</body>
+</html>
