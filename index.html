@@ -3,12 +3,6 @@
 <head>
 	<meta charset="UTF-8">
 	<title>阿珂同学</title>
-	<script>
-		var userAgent = window.navigator.userAgent;
-		if (userAgent.indexOf("Mobile") > -1) {
-			window.location.href = "flex.html";
-		}
-	</script>
 	<style>
 		* {
 			margin: 0;
@@ -19,5 +13,11 @@
 <body>
 	<p>欢迎来到我的空间</p>
 	<a href="./game/2048.html">2048</a>
+	<script>
+		var userAgent = window.navigator.userAgent;
+		if (userAgent.indexOf("Mobile") > -1) {
+			window.location.href = "flex.html";
+		}
+	</script>
 </body>
 </html>
